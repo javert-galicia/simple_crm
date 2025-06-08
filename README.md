@@ -13,7 +13,7 @@ Simple CRM es una aplicación Flutter multiplataforma para la gestión de client
 ## Instalación y ejecución
 1. Clona este repositorio:
    ```sh
-   git clone https://github.com/tuusuario/simple_crm.git
+   git clone https://github.com/javert-galicia/simple_crm.git
    cd simple_crm
    ```
 2. Instala dependencias:
@@ -36,4 +36,4 @@ MIT
 
 ---
 
-Para más información, consulta la documentación en la carpeta `docs/` o visita la [página del proyecto](https://tuusuario.github.io/simple_crm/).
+Para más información, consulta la documentación en la carpeta `docs/` o visita la [página del proyecto](https://javiert-galicia.github.io/simple_crm/).
