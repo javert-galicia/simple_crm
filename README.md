@@ -36,4 +36,4 @@ MIT
 
 ---
 
-Para más información, consulta la documentación en la carpeta `docs/` o visita la [página del proyecto](https://javiert-galicia.github.io/simple_crm/).
+Para más información, consulta la documentación en la carpeta `docs/` o visita la [página del proyecto](https://javert-galicia.github.io/simple_crm/).
