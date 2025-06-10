@@ -141,19 +141,15 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
       final rows = const CsvToListConverter().convert(csvStr, eol: '\n');
       if (rows.length > 1) {
         // Buscar columnas por nombre para soportar cualquier CSV compatible
-        // Eliminar saltos de línea y espacios en los headers
         final header = rows[0]
             .map((h) => h.toString().toLowerCase().replaceAll(RegExp(r'\s+'), '').replaceAll(RegExp(r'\n|\r'), ''))
             .toList();
-        debugPrint('header: ' + header.toString());
-        int idIdx = header.indexOf('id');
-        int nameIdx = header.indexOf('nombre');
-        int emailIdx = header.indexOf('email');
-        int phoneIdx = header.indexOf('teléfono');
-        int logsIdx = header.indexOf('logs');
-        if (logsIdx == -1) {
-          debugPrint('ERROR: No se encontró la columna "logs" en el header.');
-        }
+        // Permitir importar CSVs con cualquier encabezado compatible
+        int idIdx = header.indexWhere((h) => h.contains('id'));
+        int nameIdx = header.indexWhere((h) => h.contains('nombre') || h.contains('name'));
+        int emailIdx = header.indexWhere((h) => h.contains('email'));
+        int phoneIdx = header.indexWhere((h) => h.contains('tel') || h.contains('phone'));
+        int logsIdx = header.indexWhere((h) => h.contains('logs'));
         setState(() {
           customers = rows.skip(1).map((row) {
             if (row.length < header.length) {
@@ -166,20 +162,16 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             List logsList = [];
             if (logsIdx >= 0 && row.length > logsIdx) {
               var logsRaw = row[logsIdx];
-              // Normalizar logsRaw: puede venir como [] o "[]" o string con logs
               if (logsRaw is String) {
                 final trimmed = logsRaw.trim();
                 if (trimmed == '[]' || trimmed == '"[]"' || trimmed == '' || trimmed == '""') {
                   logsList = [];
                 } else {
-                  // Quitar comillas dobles externas si existen
                   String jsonStr = trimmed;
                   if (jsonStr.startsWith('"') && jsonStr.endsWith('"')) {
                     jsonStr = jsonStr.substring(1, jsonStr.length - 1);
                   }
-                  // Reemplazar comillas simples por dobles SOLO si hay logs
                   jsonStr = jsonStr.replaceAll("'", '"');
-                  // Validar que el string comience y termine con [ ]
                   if (!jsonStr.trim().startsWith('[')) {
                     jsonStr = '[$jsonStr]';
                   }
@@ -206,14 +198,6 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
               } else {
                 logsList = [];
               }
-            }
-            // DEPURACIÓN: imprimir fila completa y logsIdx
-            debugPrint('row: ' + row.toString());
-            debugPrint('logsIdx: ' + logsIdx.toString());
-            if (logsIdx >= 0 && row.length > logsIdx) {
-              var logsRaw = row[logsIdx];
-              debugPrint('logsRaw: ' + logsRaw.toString());
-              debugPrint('logsList: ' + logsList.toString());
             }
             List<CustomerLog> parsedLogs = [];
             try {
